@@ -2,7 +2,7 @@
 Here we are playing around and learning how to create a Chrome Extension.
 
 ## Goal of the Project
-The goal is learn, how one creates a Chrome extension. Let's create a simple 
+The goal is to learn, how one creates a Chrome extension. Let's create a simple 
 plugin, that can parse predefined HTML page and extract required data from it.
 The HTML page should contain a table with the following fields:  
 - ID
