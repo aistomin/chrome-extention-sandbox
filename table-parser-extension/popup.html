@@ -1,23 +1,74 @@
-<!-- popup.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World Extension</title>
+    <title>Search Extension</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            width: 200px;
+            width: 300px;
             padding: 10px;
         }
         h1 {
+            font-size: 18px;
             color: #333;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 8px;
+            margin-right: 5px;
+            box-sizing: border-box;
+        }
+        .search-container button {
+            padding: 8px 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
         }
     </style>
 </head>
 <body>
-<h1>Hello World!</h1>
-<p>Welcome to your first Chrome extension!</p>
+
+<h1>Search Users</h1>
+
+<!-- Search form -->
+<div class="search-container">
+    <input type="text" id="search-name" placeholder="Enter name" />
+    <button id="search-btn">Search</button>
+</div>
+
+<!-- Table for displaying search results -->
+<table id="results-table" style="display: none;">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+    </tr>
+    </thead>
+    <tbody id="table-body">
+    <!-- Data rows will be inserted here -->
+    </tbody>
+</table>
+
+<script src="popup.js"></script>
 </body>
 </html>
