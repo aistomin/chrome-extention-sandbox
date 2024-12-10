@@ -2,16 +2,16 @@
 Here we are playing around and learning how to create a Chrome Extension.
 
 ## Goal of the Project
-The goal is to learn, how one creates a Chrome extension. Let's create a simple 
+The goal is to learn, how to create a simple Chrome extension. Let's create a
 plugin, that can parse predefined HTML page and extract required data from it.
 The HTML page should contain a table with the following fields:  
 - ID
 - First Name
 - Last Name
-- Details: a link that user can click to see the personal info of the person as
-a pop-up.
+- Details(Hyperlink). User can click to see the personal info of the person as
+a popup.
 
-The details popup should contain the following fields:
+The "Details" popup should contain the following fields:
 - ID
 - First Name
 - Last Name
@@ -28,7 +28,7 @@ Let's create a Chrome Extension, that would allow to search records by name
 4. Click Load unpacked. 
 5. Select the [table-parser-extension](table-parser-extension) folder. 
 6. Once the extension is loaded, you should see the extension icon in your toolbar. 
-7. Click on the extension icon, and it should open the popup showing the "Hello World!" message.
+7. Click on the extension icon, and it should open the popup showing the search form.
 
 ## Demo
 1. Load the extension into Chrome.
