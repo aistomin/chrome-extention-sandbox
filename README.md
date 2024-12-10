@@ -29,3 +29,10 @@ Let's create a Chrome Extension, that would allow to search records by name
 5. Select the [table-parser-extension](table-parser-extension) folder. 
 6. Once the extension is loaded, you should see the extension icon in your toolbar. 
 7. Click on the extension icon, and it should open the popup showing the "Hello World!" message.
+
+## Demo
+1. Load the extension into Chrome.
+2. Open [persons.html](web-pages%2Fpersons.html) in the active tab.
+3. Click on the extension in the toolbar.
+4. Enter the name to search.
+5. Enjoy the results.
