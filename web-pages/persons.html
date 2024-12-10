@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table with Pop-Up Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 1000;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .close-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>Sample Table with Pop-Up Details</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Details</th>
+    </tr>
+    </thead>
+    <tbody id="table-body">
+    <!-- Rows will be populated by JavaScript -->
+    </tbody>
+</table>
+
+<!-- Pop-Up Overlay -->
+<div class="overlay" id="overlay"></div>
+<div class="popup" id="popup">
+    <button class="close-btn" id="close-btn">Close</button>
+    <h2>Details</h2>
+    <p><strong>ID:</strong> <span id="popup-id"></span></p>
+    <p><strong>First Name:</strong> <span id="popup-firstname"></span></p>
+    <p><strong>Last Name:</strong> <span id="popup-lastname"></span></p>
+    <p><strong>Email:</strong> <span id="popup-email"></span></p>
+    <p><strong>Phone Number:</strong> <span id="popup-phone"></span></p>
+</div>
+
+<script>
+    // Sample realistic data with repeating names and duplicate emails
+    const sampleData = [
+        { id: 1, firstName: "Alice", lastName: "Johnson", email: "alice.johnson@example.com", phone: "555-1234" },
+        { id: 2, firstName: "Alice", lastName: "Swansson", email: "shared.email@example.com", phone: "555-2345" },
+        { id: 3, firstName: "Robert", lastName: "Johnson", email: "robert.johnson@example.com", phone: "555-3456" },
+        { id: 4, firstName: "Alice", lastName: "Johnson", email: "shared.email@example.com", phone: "555-4567" },
+        { id: 5, firstName: "Eve", lastName: "Taylor", email: "eve.taylor@example.com", phone: "555-5678" },
+        { id: 6, firstName: "Frank", lastName: "Miller", email: "frank.miller@example.com", phone: "555-6789" },
+        { id: 7, firstName: "Alice", lastName: "Johnson", email: "alice.johnson@example.com", phone: "555-7890" },
+        { id: 8, firstName: "Robert", lastName: "Brown", email: "robert.johnson@example.com", phone: "555-8901" },
+        { id: 9, firstName: "Alice", lastName: "Swansson", email: "alice.johnson@example.com", phone: "555-9012" },
+        { id: 10, firstName: "Jack", lastName: "Reynolds", email: "jack.reynolds@example.com", phone: "555-1012" },
+        { id: 11, firstName: "Kara", lastName: "Danvers", email: "kara.danvers@example.com", phone: "555-1113" },
+        { id: 12, firstName: "Leo", lastName: "Fitz", email: "shared.email@example.com", phone: "555-1214" },
+        { id: 13, firstName: "Mia", lastName: "Moore", email: "mia.moore@example.com", phone: "555-1315" },
+        { id: 14, firstName: "Nina", lastName: "Williams", email: "nina.williams@example.com", phone: "555-1416" },
+        { id: 15, firstName: "Oscar", lastName: "Garcia", email: "oscar.garcia@example.com", phone: "555-1517" },
+        { id: 16, firstName: "Paul", lastName: "Adams", email: "shared.email@example.com", phone: "555-1618" },
+        { id: 17, firstName: "Quinn", lastName: "Evans", email: "quinn.evans@example.com", phone: "555-1719" },
+        { id: 18, firstName: "Rachel", lastName: "Davis", email: "shared.email@example.com", phone: "555-1810" },
+        { id: 19, firstName: "Sam", lastName: "Wilson", email: "sam.wilson@example.com", phone: "555-1911" },
+        { id: 20, firstName: "Tina", lastName: "Chen", email: "tina.chen@example.com", phone: "555-2021" },
+    ];
+
+    // Populate the table
+    const tableBody = document.getElementById('table-body');
+    sampleData.forEach(person => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+                <td>${person.id}</td>
+                <td>${person.firstName}</td>
+                <td>${person.lastName}</td>
+                <td><a href="#" class="details-link" data-id="${person.id}">Details</a></td>
+            `;
+        tableBody.appendChild(row);
+    });
+
+    // Popup and overlay elements
+    const popup = document.getElementById('popup');
+    const overlay = document.getElementById('overlay');
+    const closeBtn = document.getElementById('close-btn');
+
+    // Event listener for Details links
+    document.querySelectorAll('.details-link').forEach(link => {
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            const personId = parseInt(event.target.getAttribute('data-id'));
+            const person = sampleData.find(p => p.id === personId);
+
+            // Fill in the popup details
+            document.getElementById('popup-id').textContent = person.id;
+            document.getElementById('popup-firstname').textContent = person.firstName;
+            document.getElementById('popup-lastname').textContent = person.lastName;
+            document.getElementById('popup-email').textContent = person.email;
+            document.getElementById('popup-phone').textContent = person.phone;
+
+            // Show popup
+            overlay.style.display = 'block';
+            popup.style.display = 'block';
+        });
+    });
+
+    // Close popup
+    closeBtn.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        popup.style.display = 'none';
+    });
+    overlay.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        popup.style.display = 'none';
+    });
+</script>
+</body>
+</html>
