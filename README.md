@@ -20,3 +20,12 @@ The details popup should contain the following fields:
 
 Let's create a Chrome Extension, that would allow to search records by name
 (first + last name), email and phone number.
+
+## How to load the extension into Chrome?
+1. Clone the repo. 
+2. Open Chrome and navigate to `chrome://extensions/`. 
+3. Turn on Developer mode (toggle in the top right). 
+4. Click Load unpacked. 
+5. Select the [table-parser-extension](table-parser-extension) folder you created. 
+6. Once the extension is loaded, you should see the extension icon in your toolbar. 
+7. Click on the extension icon, and it should open the popup showing the "Hello World!" message.
