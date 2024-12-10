@@ -1,15 +1,15 @@
 // Dummy data for the table
 const dummyData = [
-    {id: 1, firstName: 'Alice', lastName: 'Johnson'},
-    {id: 2, firstName: 'Bob', lastName: 'Smith'},
-    {id: 3, firstName: 'Charlie', lastName: 'Brown'},
-    {id: 4, firstName: 'David', lastName: 'White'},
-    {id: 5, firstName: 'Eve', lastName: 'Taylor'},
-    {id: 6, firstName: 'Frank', lastName: 'Miller'},
-    {id: 7, firstName: 'Grace', lastName: 'Davis'},
-    {id: 8, firstName: 'Helen', lastName: 'Wilson'},
-    {id: 9, firstName: 'Ivy', lastName: 'Moore'},
-    {id: 10, firstName: 'Jack', lastName: 'Reynolds'}
+    { id: 1, firstName: 'Alice', lastName: 'Johnson' },
+    { id: 2, firstName: 'Bob', lastName: 'Smith' },
+    { id: 3, firstName: 'Charlie', lastName: 'Brown' },
+    { id: 4, firstName: 'David', lastName: 'White' },
+    { id: 5, firstName: 'Eve', lastName: 'Taylor' },
+    { id: 6, firstName: 'Frank', lastName: 'Miller' },
+    { id: 7, firstName: 'Grace', lastName: 'Davis' },
+    { id: 8, firstName: 'Helen', lastName: 'Wilson' },
+    { id: 9, firstName: 'Ivy', lastName: 'Moore' },
+    { id: 10, firstName: 'Jack', lastName: 'Reynolds' }
 ];
 
 // Function to render the table with the given data
@@ -53,13 +53,19 @@ document.getElementById('search-btn').addEventListener('click', () => {
     // Render the filtered data in the table
     renderTable(filteredData);
 
-    // Get the current page's title using chrome.tabs.query
-    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-        const pageTitle = tabs[0].title;
+    // Get the number of <table> elements on the current page using chrome.scripting.executeScript
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        chrome.scripting.executeScript({
+            target: { tabId: tabs[0].id },
+            func: () => document.querySelectorAll("table").length
+        }, (results) => {
+            // Get the count from the script result
+            const tableCount = results[0].result;
 
-        // Display the page title above the table
-        const titleElement = document.createElement('h2');
-        titleElement.textContent = `Page Title: ${pageTitle}`;
-        document.body.insertBefore(titleElement, document.querySelector('.search-container'));
+            // Display the number of tables found on the page
+            const tableCountElement = document.createElement('h2');
+            tableCountElement.textContent = `Tables found on this page: ${tableCount}`;
+            document.body.insertBefore(tableCountElement, document.querySelector('.search-container'));
+        });
     });
 });
