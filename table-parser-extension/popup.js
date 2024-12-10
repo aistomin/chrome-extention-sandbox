@@ -32,10 +32,10 @@ document.getElementById('search-btn').addEventListener('click', () => {
     const searchQuery = document.getElementById('search-name').value.toLowerCase();
 
     // Query the current active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
         // Extract the table data from the active page using scripting.executeScript
         chrome.scripting.executeScript({
-            target: { tabId: tabs[0].id },
+            target: {tabId: tabs[0].id},
             func: extractTableData
         }, (results) => {
             // The result contains the extracted table data
@@ -43,7 +43,9 @@ document.getElementById('search-btn').addEventListener('click', () => {
 
             // Filter the data based on the search query (first or last name)
             const filteredData = extractedData.filter(person => {
-                return person.firstName.toLowerCase().includes(searchQuery) || person.lastName.toLowerCase().includes(searchQuery);
+                return person.firstName.toLowerCase().includes(searchQuery) ||
+                    person.lastName.toLowerCase().includes(searchQuery) ||
+                    person.firstName.toLowerCase().concat(' ').concat(person.lastName.toLowerCase()).includes(searchQuery.toLowerCase());
             });
 
             // Render the filtered data in the table
