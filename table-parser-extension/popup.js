@@ -19,6 +19,8 @@ function renderTable(data) {
             <td>${person.id}</td>
             <td>${person.firstName}</td>
             <td>${person.lastName}</td>
+            <td>${person.email}</td>
+            <td>${person.phone}</td>
         `;
         tableBody.appendChild(row);
     });
@@ -36,26 +38,20 @@ document.getElementById('search-btn').addEventListener('click', () => {
         // Extract the table data from the active page using scripting.executeScript
         chrome.scripting.executeScript({
             target: {tabId: tabs[0].id},
-            func: extractTableData
+            func: extractAndEnrichTableData,
+            args: [searchQuery]
         }, (results) => {
-            // The result contains the extracted table data
-            const extractedData = results[0].result;
+            // The result contains the enriched table data with email and phone
+            const enrichedData = results[0].result;
 
-            // Filter the data based on the search query (first or last name)
-            const filteredData = extractedData.filter(person => {
-                return person.firstName.toLowerCase().includes(searchQuery) ||
-                    person.lastName.toLowerCase().includes(searchQuery) ||
-                    person.firstName.toLowerCase().concat(' ').concat(person.lastName.toLowerCase()).includes(searchQuery.toLowerCase());
-            });
-
-            // Render the filtered data in the table
-            renderTable(filteredData);
+            // Render the enriched data in the table
+            renderTable(enrichedData);
         });
     });
 });
 
-// Function to extract table data from the active page
-function extractTableData() {
+// Function to extract table data from the active page and enrich with email and phone
+function extractAndEnrichTableData(searchQuery) {
     // Extract table rows
     const rows = document.querySelectorAll('table tbody tr');
     const data = [];
@@ -63,14 +59,34 @@ function extractTableData() {
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
         if (cells.length >= 3) {
-            // Push the extracted data into the array
-            data.push({
-                id: parseInt(cells[0].textContent.trim()),
-                firstName: cells[1].textContent.trim(),
-                lastName: cells[2].textContent.trim()
-            });
+            const id = parseInt(cells[0].textContent.trim());
+            const firstName = cells[1].textContent.trim();
+            const lastName = cells[2].textContent.trim();
+
+            // Check if the row matches the search query
+            if (
+                firstName.toLowerCase().includes(searchQuery) ||
+                lastName.toLowerCase().includes(searchQuery) ||
+                `${firstName.toLowerCase()} ${lastName.toLowerCase()}`.includes(searchQuery)
+            ) {
+                // Simulate click on the "Details" link to open the popup
+                const detailsLink = cells[3].querySelector('.details-link');
+                if (detailsLink) {
+                    detailsLink.click();
+
+                    // Extract email and phone from the popup
+                    const email = document.getElementById('popup-email').textContent.trim();
+                    const phone = document.getElementById('popup-phone').textContent.trim();
+
+                    // Close the popup
+                    document.getElementById('close-btn').click();
+
+                    // Add the enriched data to the array
+                    data.push({ id, firstName, lastName, email, phone });
+                }
+            }
         }
     });
 
-    return data;  // Return the extracted data as an array of objects
+    return data; // Return the enriched data as an array of objects
 }

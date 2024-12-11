@@ -49,6 +49,34 @@
         th {
             background-color: #f4f4f4;
         }
+
+        /* Styling for the results table */
+        #results-table-container {
+            max-width: 100%; /* Ensure the container doesn't exceed the popup width */
+            overflow-x: auto; /* Add horizontal scrolling if the table overflows */
+            margin-top: 10px;
+        }
+
+        #results-table {
+            width: 100%; /* Stretch table to fill the container */
+            border-collapse: collapse; /* Collapse borders */
+            table-layout: auto; /* Allow columns to adjust to content size */
+        }
+
+        #results-table th, #results-table td {
+            border: 1px solid #ddd; /* Add borders to cells */
+            padding: 8px; /* Add padding for better readability */
+            text-align: left; /* Align text to the left */
+        }
+
+        #results-table th {
+            background-color: #f4f4f4; /* Light gray background for headers */
+            font-weight: bold;
+        }
+
+        #results-table td {
+            word-break: break-word; /* Handle long text gracefully */
+        }
     </style>
 </head>
 <body>
@@ -68,6 +96,8 @@
         <th>ID</th>
         <th>First Name</th>
         <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone</th>
     </tr>
     </thead>
     <tbody id="table-body">
