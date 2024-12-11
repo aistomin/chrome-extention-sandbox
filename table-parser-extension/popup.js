@@ -1,5 +1,7 @@
 // Function to render the table with the given data
 function renderTable(data) {
+    console.log("Render table with the following content: ", data);
+
     const tableBody = document.getElementById('table-body');
     const resultsTable = document.getElementById('results-table');
 
@@ -8,6 +10,7 @@ function renderTable(data) {
 
     // If no data is found, hide the table and return
     if (data.length === 0) {
+        console.log("There is no data to display, hide the results table.");
         resultsTable.style.display = 'none';
         return;
     }
@@ -27,31 +30,36 @@ function renderTable(data) {
 
     // Show the table
     resultsTable.style.display = 'table';
+    console.log("The results table is rendered.");
 }
 
 // Event listener for the search button
 document.getElementById('search-btn').addEventListener('click', () => {
-    const searchQuery = document.getElementById('search-name').value.toLowerCase();
+    const query = document.getElementById('search-name').value.toLowerCase();
 
-    // Query the current active tab
-    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-        // Extract the table data from the active page using scripting.executeScript
-        chrome.scripting.executeScript({
-            target: {tabId: tabs[0].id},
-            func: search,
-            args: [searchQuery]
-        }, (results) => {
-            // The result contains the enriched table data with email and phone
-            const enrichedData = results[0].result;
-
-            // Render the enriched data in the table
-            renderTable(enrichedData);
+    console.log("User is looking for:", query);
+    if (query) {
+        // Query the current active tab
+        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+            // Extract the table data from the active page using scripting.executeScript
+            chrome.scripting.executeScript({
+                target: {tabId: tabs[0].id},
+                func: search,
+                args: [query]
+            }, (results) => {
+                const result = results[0].result;
+                console.log("Display the following records to the user: ", result);
+                renderTable(result);
+            });
         });
-    });
+    } else {
+        console.log("Query string is empty, nothing to search.");
+    }
 });
 
 // Function to extract table data from the active page and enrich with the data from popup.
 function search(query) {
+    console.log("Search for:", query);
     const rows = document.querySelectorAll('table tbody tr'); // read rows
 
     const result = [];
@@ -69,11 +77,14 @@ function search(query) {
             const phone = document.getElementById('popup-phone').textContent.trim(); // read from popup
             document.getElementById('close-btn').click(); // close popup
             // Check if the row matches the search query
-            const fullName  =`${firstName.toLowerCase()} ${lastName.toLowerCase()}`
+            const fullName = `${firstName.toLowerCase()} ${lastName.toLowerCase()}`
             if (fullName.includes(query) || email.includes(query) || phone.includes(query)) {
-                result.push({ id, firstName, lastName, email, phone });
+                const record = {id, firstName, lastName, email, phone};
+                console.log("Record found:", record);
+                result.push(record);
             }
         }
     });
+    console.log("All the found records:", result);
     return result;
 }

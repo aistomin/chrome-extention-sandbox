@@ -1,3 +1,3 @@
 chrome.runtime.onInstalled.addListener(() => {
-    console.log("Hello World Extension installed!");
+    console.log("Table Parser Extension installed!");
 });
