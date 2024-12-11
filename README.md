@@ -34,5 +34,5 @@ Let's create a Chrome Extension, that would allow to search records by name
 1. Load the extension into Chrome.
 2. Open [persons.html](web-pages%2Fpersons.html) in the active tab.
 3. Click on the extension in the toolbar.
-4. Enter the name to search.
+4. Enter the name, email or phone part to search.
 5. Enjoy the results.

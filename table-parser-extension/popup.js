@@ -38,7 +38,7 @@ document.getElementById('search-btn').addEventListener('click', () => {
         // Extract the table data from the active page using scripting.executeScript
         chrome.scripting.executeScript({
             target: {tabId: tabs[0].id},
-            func: extractAndEnrichTableData,
+            func: search,
             args: [searchQuery]
         }, (results) => {
             // The result contains the enriched table data with email and phone
@@ -50,43 +50,30 @@ document.getElementById('search-btn').addEventListener('click', () => {
     });
 });
 
-// Function to extract table data from the active page and enrich with email and phone
-function extractAndEnrichTableData(searchQuery) {
-    // Extract table rows
-    const rows = document.querySelectorAll('table tbody tr');
-    const data = [];
+// Function to extract table data from the active page and enrich with the data from popup.
+function search(query) {
+    const rows = document.querySelectorAll('table tbody tr'); // read rows
 
+    const result = [];
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
         if (cells.length >= 3) {
+            // Read the flat data from the table.
             const id = parseInt(cells[0].textContent.trim());
             const firstName = cells[1].textContent.trim();
             const lastName = cells[2].textContent.trim();
-
+            // Read additional fields, that are hidden behind the "Details" link.
+            const detailsLink = cells[3].querySelector('.details-link');
+            detailsLink.click(); // click the link
+            const email = document.getElementById('popup-email').textContent.trim(); // read from popup
+            const phone = document.getElementById('popup-phone').textContent.trim(); // read from popup
+            document.getElementById('close-btn').click(); // close popup
             // Check if the row matches the search query
-            if (
-                firstName.toLowerCase().includes(searchQuery) ||
-                lastName.toLowerCase().includes(searchQuery) ||
-                `${firstName.toLowerCase()} ${lastName.toLowerCase()}`.includes(searchQuery)
-            ) {
-                // Simulate click on the "Details" link to open the popup
-                const detailsLink = cells[3].querySelector('.details-link');
-                if (detailsLink) {
-                    detailsLink.click();
-
-                    // Extract email and phone from the popup
-                    const email = document.getElementById('popup-email').textContent.trim();
-                    const phone = document.getElementById('popup-phone').textContent.trim();
-
-                    // Close the popup
-                    document.getElementById('close-btn').click();
-
-                    // Add the enriched data to the array
-                    data.push({ id, firstName, lastName, email, phone });
-                }
+            const fullName  =`${firstName.toLowerCase()} ${lastName.toLowerCase()}`
+            if (fullName.includes(query) || email.includes(query) || phone.includes(query)) {
+                result.push({ id, firstName, lastName, email, phone });
             }
         }
     });
-
-    return data; // Return the enriched data as an array of objects
+    return result;
 }
